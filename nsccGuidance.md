@@ -146,6 +146,8 @@ print(outputs[0].outputs[0].text.strip())
 #PBS -q normal
 cd $PBS_O_WORKDIR
 
+module load miniforge3
+
 source ~/anaconda3/etc/profile.d/conda.sh
 conda activate vllm_env
 
