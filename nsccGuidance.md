@@ -3,9 +3,13 @@
 ## 1. Get an Account
 
 <https://user.nscc.sg/saml/>
+
 ![What you should see when you enter in nscc](image.png)
+
 After creating your account you should see the dashboard.
+
 ![What you should see when you sucessfully enter in](image-1.png)
+
 
 ## 2. Connect to the Systems
 
