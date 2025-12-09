@@ -40,11 +40,15 @@ ssh <userid>@aspire2pntu.nscc.sg
 ### Visual Studio Code Setup
 
 1. Press `Ctrl-Shift-P` (or `Cmd-Shift-P` on Mac)
+
 ![configured SSH](<Screenshot 2025-12-03 103226.png>)
+
 2. Press "Add New SSH Host" / "Configure SSH Hosts"
 
 3. Add these two for VPN and NSCC Cluster
+
 ![ntu-jump-hots code and asipre2a code](<Screenshot 2025-12-03 103130.png>)
+
 ## 4. Storage Setup
 
 Your Home directory has a strict limit (50GB). Do not run big jobs or build containers here. Always work in your Scratch directory (100TB limit).
