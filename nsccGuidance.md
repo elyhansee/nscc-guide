@@ -116,6 +116,61 @@ singularity exec python.sif python3 -c "print('Python container success! 3 + 4 =
 Here is what you should see:
 ![What you should see](<Screenshot 2025-12-09 161633.png>)
 
+## 7. Running vLLM
+
+### 1. Firstly, create and activate a new environment 
+### 2. Then pip install vLLM 
+```
+pip install vllm
+```
+### 3. Save this as a python file 
+```python
+python -c "from vllm import LLM,SamplingParams
+
+llm=LLM('meta-llama/Llama-2-7b-hf', gpu_memory_utilization=0.7) 
+params=SamplingParams(max_token=128,temperature=0.7)
+outputs=llms.generate(['What is cake?'],params)
+
+print(outputs[0].outputs[0].text.strip())"
+```
+### 4. Create a Job Script
+
+```bash
+#!/bin/bash
+#PBS -N Cake-test
+
+#PBS -l select=1:ngpus=1:mem=400gb
+#PBS -l walltime=04:00:00
+#PBS -j oe
+#PBS -P personal-<Add your own uid>
+#PBS -q normal
+cd $PBS_O_WORKDIR
+
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate vllm_env
+
+python -c "
+from vllm import LLM, SamplingParams
+prompts = ['Hello, my name is']
+sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
+llm = LLM(model='facebook/opt-125m')
+outputs = llm.generate(prompts, sampling_params)
+for output in outputs:
+    print(f'Generated: {output.outputs[0].text}')
+"
+```
+
+### 5.Submit the Job
+```bash
+qsub test.sh
+```
+
+### 6.Check Status
+Use qstat to check if your job is queued (Q), running (R), or finished. Replace <id> with your username.
+```bash
+qstat -u <your_username>
+```
+
 ## References
 
 <https://nsccsg.github.io/>
