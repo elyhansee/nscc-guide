@@ -149,7 +149,7 @@ cd $PBS_O_WORKDIR
 module load miniforge3
 
 source ~/anaconda3/etc/profile.d/conda.sh
-conda activate vllm_env
+conda activate yourenvname
 
 python yourfilename.py
 ```
