@@ -125,13 +125,13 @@ pip install vllm
 ```
 ### 3. Save this as a python file 
 ```python
-python -c "from vllm import LLM,SamplingParams
+from vllm import LLM,SamplingParams
 
 llm=LLM('meta-llama/Llama-2-7b-hf', gpu_memory_utilization=0.7) 
 params=SamplingParams(max_token=128,temperature=0.7)
 outputs=llms.generate(['What is cake?'],params)
 
-print(outputs[0].outputs[0].text.strip())"
+print(outputs[0].outputs[0].text.strip())
 ```
 ### 4. Create a Job Script
 
@@ -149,15 +149,7 @@ cd $PBS_O_WORKDIR
 source ~/anaconda3/etc/profile.d/conda.sh
 conda activate vllm_env
 
-python -c "
-from vllm import LLM, SamplingParams
-prompts = ['Hello, my name is']
-sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
-llm = LLM(model='facebook/opt-125m')
-outputs = llm.generate(prompts, sampling_params)
-for output in outputs:
-    print(f'Generated: {output.outputs[0].text}')
-"
+python yourfilename.py
 ```
 
 ### 5.Submit the Job
