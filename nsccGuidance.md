@@ -117,13 +117,23 @@ Here is what you should see:
 ![What you should see](<Screenshot 2025-12-09 161633.png>)
 
 ## 7. Running vLLM
+Follow these steps to set up your environment, write a test script, and submit a job to the queue.
 
-### 1. Firstly, create and activate a new environment 
-### 2. Then pip install vLLM 
+### 1. Set Up the Environment
+Firstly, create and activate a new environment 
+```bash
+conda create -n vllm-env python=3.10 -y
+conda activate vllm-env
 ```
+### 2. Install vLLM 
+Install the vLLM library using pip.
+```bash
 pip install vllm
 ```
-### 3. Save this as a python file 
+
+### 3. Create the Python Script
+Create a file named vllm_test.py. This script initializes the engine with a small model (TinyLlama) to verify that the installation is working correctly.
+
 ```python
 from vllm import LLM,SamplingParams
 
@@ -135,7 +145,10 @@ for o in outputs:
     generated_text = o.outputs[0].text
     print(generated_text)
 ```
-### 4. Create a Job Script
+gpu_memory_utilization is explicitly set. This is often necessary on shared nodes to prevent vLLM from attempting to reserve all available VRAM, which can cause crashes if the GPU is shared or if overhead is high.
+
+### 4. Create the Job Script
+Create a PBS submission script named submit_job.sh. Ensure you replace the placeholders (bracketed text) with your actual project details and username.
 
 ```bash
 #!/bin/bash
@@ -157,8 +170,10 @@ python yourfilename.py
 ```
 
 ### 5.Submit the Job
+Submit your job script to the scheduler.
+
 ```bash
-qsub test.sh
+qsub submit_job.sh
 ```
 
 ### 6.Check Status
