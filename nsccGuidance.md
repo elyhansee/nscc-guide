@@ -56,8 +56,17 @@ Your Home directory has a strict limit (50GB). Do not run big jobs or build cont
 ```bash
 cd scratch
 ```
+## 5. Running heavy Installations
+Do NOT run heavy installations or code on the Login Node. The login node (where you first land) is shared by everyone. Running heavy tasks like pip install, compiling code, or building containers there will trigger a Fair Share Violation, terminate your processes, and could get your account blocked.
 
-## 5. Making Containers
+### Start an Interactive Job
+Move from the "Login Node" to a "Compute Node" using an interactive session. This gives you a dedicated sandbox to work in.
+```bash
+# Replace <YOUR_PROJECT_ID> with your actual project code (e.g., personal-xxx)
+qsub -I -P <YOUR_PROJECT_ID> -l select=1:ngpus=1:mem=64gb -l walltime=02:00:00 -q normal
+```
+
+## 6. Making Containers
 
 ### What is a container?
 
@@ -96,7 +105,7 @@ singularity exec alpine.sif echo "Hello! Singularity is working."
 Here is what you should see:
 ![What you should see](<Screenshot 2025-12-09 155919.png>)
 
-## 6. Running a Real Runtime with Python
+## 7. Running a Real Runtime with Python
 
 ### 1. Download the official Python image
 
@@ -116,7 +125,7 @@ singularity exec python.sif python3 -c "print('Python container success! 3 + 4 =
 Here is what you should see:
 ![What you should see](<Screenshot 2025-12-09 161633.png>)
 
-## 7. Running vLLM
+## 8. Running vLLM
 Follow these steps to set up your environment, write a test script, and submit a job to the queue.
 
 ### 1. Set Up the Environment
