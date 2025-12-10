@@ -127,11 +127,13 @@ pip install vllm
 ```python
 from vllm import LLM,SamplingParams
 
-llm=LLM('meta-llama/Llama-2-7b-hf', gpu_memory_utilization=0.7) 
-params=SamplingParams(max_token=128,temperature=0.7)
+llm=LLM('TinyLlama/TinyLlama-1.1B-Chat-v1.0', gpu_memory_utilization=0.7) 
+params=SamplingParams(max_tokens=128,temperature=0.7)
 outputs=llm.generate(['What is cake?'],params)
 
-print(outputs[0].outputs[0].text.strip())
+for o in outputs:
+    generated_text = o.outputs[0].text
+    print(generated_text)
 ```
 ### 4. Create a Job Script
 
