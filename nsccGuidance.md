@@ -45,7 +45,7 @@ ssh <userid>@aspire2pntu.nscc.sg
 
 2. Press "Add New SSH Host" / "Configure SSH Hosts"
 
-3. Add these two for VPN and NSCC Cluster
+3. Add these two for VPN and NSCC Cluster (If you are in NTU please ignore the jump host)
 
 ![ntu-jump-hots code and asipre2a code](<Screenshot 2025-12-03 103130.png>)
 
