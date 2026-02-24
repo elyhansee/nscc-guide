@@ -190,6 +190,92 @@ Use qstat to check if your job is queued (Q), running (R), or finished. Replace 
 ```bash
 qstat -u <your_username>
 ```
+## 9. Running Jupyter Notebook with Singularity
+
+Running JupyterLab on a compute node allows GPU-accelerated interactive development.
+
+Since compute nodes are not directly accessible from your browser, you must:
+
+Submit a PBS job
+
+Use SSH tunneling
+
+1. Create Jupyter PBS Script (jupyter_job.sh)
+```bash
+#!/bin/bash
+#PBS -N gemma3_unsloth_jupyter
+#PBS -l select=1:ncpus=16:ngpus=1:mem=64gb
+#PBS -l walltime=24:00:00
+#PBS -j oe
+#PBS -P <YOUR_PROJECT_ID>
+
+set -euo pipefail
+cd "$PBS_O_WORKDIR"
+
+export CUDA_VISIBLE_DEVICES=0
+
+module load singularity
+
+SCRATCH_DIR=/scratch/users/ntu/<YOUR_USER_ID>/masterclass
+IMG=$SCRATCH_DIR/pytorch_base.sif
+CACHE_DIR_INSIDE=/venv_inside/unsloth_cache
+
+echo "=== Starting Jupyter Lab ==="
+
+singularity exec --nv \
+  -B $SCRATCH_DIR/hf_cache:/hf_cache_inside \
+  -B $SCRATCH_DIR/venv_dir:/venv_inside \
+  -B $PBS_O_WORKDIR:/workspace \
+  --env PYTHONNOUSERSITE=1 \
+  --env HF_HOME=/hf_cache_inside \
+  --env TMPDIR=/venv_inside/tmp \
+  --env UNSLOTH_CACHE_DIR=$CACHE_DIR_INSIDE \
+  --env TRITON_CACHE_DIR=$CACHE_DIR_INSIDE/triton \
+  --env TORCH_HOME=/venv_inside/torch_cache \
+  "$IMG" \
+  bash -c "
+    mkdir -p /venv_inside/tmp
+    mkdir -p $CACHE_DIR_INSIDE
+    mkdir -p $CACHE_DIR_INSIDE/triton
+    mkdir -p /venv_inside/torch_cache
+
+    python3 -m venv --system-site-packages /venv_inside/env && \
+    source /venv_inside/env/bin/activate && \
+    pip install \
+      'unsloth[colab-new] @ https://github.com/unslothai/unsloth/archive/refs/heads/main.zip' \
+      lark-parser shapely datasets trl jupyterlab && \
+    cd /workspace && \
+    jupyter-lab --ip=\$(hostname -i) --port=8888 --no-browser
+  "
+
+echo "=== Job Complete ==="
+```
+
+Submit:
+```bash
+qsub jupyter_job.sh
+```
+2. Connect via SSH Tunnel
+Step 1: Find IP and Token
+```bash
+cat gemma3_unsloth_jupyter.o*
+```
+Look for:
+
+http://10.x.x.x:8888/lab?token=abc123...
+
+Copy:
+IP address (10.x.x.x)
+Token
+Step 2: Create SSH Tunnel (Local Machine)
+ssh -N -f -L 8888:10.x.x.x:8888 <userid>@aspire2antu.nscc.sg
+
+Step 3: Open Browser
+http://localhost:8888
+
+Paste the token when prompted.
+
+You are now running JupyterLab on an NSCC GPU compute node.
 
 ## References
 
